@@ -1,9 +1,26 @@
-# speedometer
+# SpeedOMeter
 
-A SpeedOMeter widget for Flutter
+A little widget that given an Observable gives you an updated SpeedOMeter.
 
+
+---
 ## Getting Started
 
-For help getting started with Flutter, view our online [documentation](https://flutter.io/).
+You should ensure that you add the following dependency in your Flutter project.
+```yaml
+dependencies:
+ speedometer: "^1.0.1"
+```
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+You should then run `flutter packages upgrade` or update your packages in IntelliJ.
+
+In your Dart code, to use it:
+```dart
+import 'package:flutter_range_slider/speedometer.dart';
+```
+
+---
+## Example
+
+An example can be found in the `example` folder.  Check it out.
+
