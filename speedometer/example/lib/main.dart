@@ -67,7 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
   
   @override
   Widget build(BuildContext context) {
-    
+      final ThemeData somTheme = new ThemeData(
+          primaryColor: Colors.blue,
+          accentColor: Colors.black,
+          backgroundColor: Colors.grey
+      );
       return  new Scaffold(
           appBar: new AppBar(
               title: new Text("SpeedOMeter"),
@@ -77,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                   new Padding(
                       padding: new EdgeInsets.all(40.0),
-                      child: new SpeedOMeter(start:start, end:end, highlightStart:(_lowerValue/end), highlightEnd:(_upperValue/end), eventObservable: this.eventObservable),
+                      child: new SpeedOMeter(start:start, end:end, highlightStart:(_lowerValue/end), highlightEnd:(_upperValue/end), themeData:somTheme, eventObservable: this.eventObservable),
                   ),
               ],
           )

@@ -14,9 +14,10 @@ class SpeedOMeter extends StatefulWidget {
   int end;
   double highlightStart;
   double highlightEnd;
+  ThemeData themeData;
 
   PublishSubject<double> eventObservable;
-  SpeedOMeter({this.start,this.end,this.highlightStart,this.highlightEnd,this.eventObservable}){
+  SpeedOMeter({this.start,this.end,this.highlightStart,this.highlightEnd,this.themeData, this.eventObservable}){
     print(this.highlightEnd);
 
   }
@@ -76,8 +77,8 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                   children: <Widget>[new Container(
                     child: new CustomPaint(
                         foregroundPainter: new LinePainter(
-                            lineColor: Colors.grey.shade400,
-                            completeColor: Colors.blue.shade700,
+                            lineColor:this.widget.themeData.backgroundColor,
+                            completeColor: this.widget.themeData.primaryColor,
                             startValue: this.start,
                             endValue: this.end,
                             startPercent: this.widget
@@ -100,7 +101,8 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                                   painter: new HandPainter(
                                       value: val,
                                       start: this.start,
-                                      end: this.end),
+                                      end: this.end,
+                                      color: this.widget.themeData.accentColor),
                                 ),
                               ]
                           )
@@ -112,7 +114,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                       height: 30.0,
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.grey.shade400,
+                        color: this.widget.themeData.backgroundColor,
                       ),
                     ),
                   ),

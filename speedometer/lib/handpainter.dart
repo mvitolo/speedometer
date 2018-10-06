@@ -7,9 +7,10 @@ class HandPainter extends CustomPainter{
   double value;
   int start;
   int end;
+  Color color;
 
-  HandPainter({this.value,this.start,this.end}):minuteHandPaint= new Paint(){
-    minuteHandPaint.color= const Color(0xFF333333);
+  HandPainter({this.value,this.start,this.end,this.color}):minuteHandPaint= new Paint(){
+    minuteHandPaint.color= this.color;
     minuteHandPaint.style= PaintingStyle.fill;
 
   }
@@ -37,7 +38,7 @@ class HandPainter extends CustomPainter{
     path.close();
 
     canvas.drawPath(path, minuteHandPaint);
-    canvas.drawShadow(path, Colors.black, 4.0, false);
+    canvas.drawShadow(path, this.color, 4.0, false);
 
     canvas.restore();
 
