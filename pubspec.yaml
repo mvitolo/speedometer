@@ -1,7 +1,7 @@
 name: speedometer
 description: A SpeedOMeter widget for Flutter
 version: 1.0.1
-author: Matteo Vitolo
+author: Matteo Vitolo<matteo.vitolo@gmail.com>
 homepage: https://github.com/mvitolo/speedometer
 
 environment:
