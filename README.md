@@ -2,6 +2,8 @@
 
 A little widget that given an Observable gives you an updated SpeedOMeter.
 
+![](https://github.com/mvitolo/speedometer/blob/master/speedometervideo.gif?raw=true&s=200)
+
 
 ---
 ## Getting Started
