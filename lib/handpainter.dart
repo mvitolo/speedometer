@@ -18,9 +18,11 @@ class HandPainter extends CustomPainter{
     @override
     void paint(Canvas canvas, Size size) {
         final radius= size.width/2;
+        double gamma = ((2/3)*this.end);
+    
         
-        double downSizedValue = ((value <= (this.end/2))? value : value - (this.end/2))*(40/this.end);
-        double realValue = (((value <= (this.end/2))? downSizedValue+40 : downSizedValue)%this.end);
+        double downSizedValue = ((value <= (this.end/2))? value : value - (this.end/2))*(gamma/this.end);
+        double realValue = (((value <= (this.end/2))? downSizedValue + gamma : downSizedValue)%this.end);
         
         canvas.save();
         
@@ -49,3 +51,4 @@ class HandPainter extends CustomPainter{
         return true;
     }
 }
+
