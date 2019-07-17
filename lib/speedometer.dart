@@ -1,4 +1,5 @@
 library speedometer;
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -36,8 +37,15 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
     double val = 0.0;
     double newVal;
     AnimationController percentageAnimationController;
+    StreamSubscription<double> subscription;
+
+    @override
+    void deactivate() {
+        subscription.cancel();
+        super.deactivate();
     
-    
+    }
+
     _SpeedOMeterState(int start, int end, double highlightStart, double highlightEnd, PublishSubject<double> eventObservable) {
         this.start = start;
         this.end = end;
@@ -54,7 +62,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                     val = lerpDouble(val,newVal,percentageAnimationController.value);
                 });
             });
-        this.eventObservable.listen((value) => reloadData(value));
+        subscription = this.eventObservable.listen((value) => reloadData(value));
     }
     
     reloadData(double value){
