@@ -62,7 +62,9 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                     val = lerpDouble(val,newVal,percentageAnimationController.value);
                 });
             });
-        subscription = this.eventObservable.listen((value) => reloadData(value));
+        subscription = this.eventObservable.listen((value) {
+                (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
+            });//(value) => reloadData(value));
     }
     
     reloadData(double value){
