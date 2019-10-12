@@ -24,7 +24,11 @@ class SpeedOMeter extends StatefulWidget {
     }
     
     @override
-    _SpeedOMeterState createState() => new _SpeedOMeterState(this.start,this.end,this.highlightStart,this.highlightEnd,this.eventObservable);
+    _SpeedOMeterState createState(){
+        _SpeedOMeterState state = _SpeedOMeterState(this.start,this.end,this.highlightStart,this.highlightEnd,this.eventObservable);
+        state.attach();
+        return state;
+    }
 }
 
 class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixin{
@@ -45,6 +49,12 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
         super.deactivate();
     
     }
+    
+    void attach(){
+        subscription = this.eventObservable.listen((value) {
+            (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
+        });//(value) => reloadData(value));
+    }
 
     _SpeedOMeterState(int start, int end, double highlightStart, double highlightEnd, PublishSubject<double> eventObservable) {
         this.start = start;
@@ -62,9 +72,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                     val = lerpDouble(val,newVal,percentageAnimationController.value);
                 });
             });
-        subscription = this.eventObservable.listen((value) {
-                (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
-            });//(value) => reloadData(value));
+        
     }
     
     reloadData(double value){
