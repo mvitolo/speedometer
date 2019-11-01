@@ -18,17 +18,11 @@ class SpeedOMeter extends StatefulWidget {
     ThemeData themeData;
     
     PublishSubject<double> eventObservable;
-    SpeedOMeter({this.start,this.end,this.highlightStart,this.highlightEnd,this.themeData, this.eventObservable}){
-        print(this.highlightEnd);
-        
+    SpeedOMeter({this.start,this.end,this.highlightStart,this.highlightEnd,this.themeData, this.eventObservable}){        
     }
     
     @override
-    _SpeedOMeterState createState(){
-        _SpeedOMeterState state = _SpeedOMeterState(this.start,this.end,this.highlightStart,this.highlightEnd,this.eventObservable);
-        state.attach();
-        return state;
-    }
+    _SpeedOMeterState createState() => new _SpeedOMeterState(this.start,this.end,this.highlightStart,this.highlightEnd,this.eventObservable);
 }
 
 class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixin{
@@ -42,19 +36,6 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
     double newVal;
     AnimationController percentageAnimationController;
     StreamSubscription<double> subscription;
-
-    @override
-    void deactivate() {
-        subscription.cancel();
-        super.deactivate();
-    
-    }
-    
-    void attach(){
-        subscription = this.eventObservable.listen((value) {
-            (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
-        });//(value) => reloadData(value));
-    }
 
     _SpeedOMeterState(int start, int end, double highlightStart, double highlightEnd, PublishSubject<double> eventObservable) {
         this.start = start;
@@ -72,7 +53,9 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
                     val = lerpDouble(val,newVal,percentageAnimationController.value);
                 });
             });
-        
+        subscription = this.eventObservable.listen((value) {
+                (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
+            });//(value) => reloadData(value));
     }
     
     reloadData(double value){
