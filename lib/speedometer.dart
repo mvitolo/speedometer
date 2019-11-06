@@ -66,6 +66,9 @@ class _SpeedOMeterState extends State<SpeedOMeter>  with TickerProviderStateMixi
     
     @override
     Widget build(BuildContext context) {
+        if ( ModalRoute.of(context).isCurrent == false ){
+          return Text("");
+        }
         return new Center(
             child: new LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
