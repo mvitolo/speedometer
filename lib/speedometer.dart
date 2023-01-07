@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:speedometer/handpainter.dart';
 import 'package:speedometer/linepainter.dart';
 import 'package:speedometer/speedtextpainter.dart';
@@ -19,16 +18,20 @@ class SpeedOMeter extends StatefulWidget {
 
   PublishSubject<double> eventObservable;
   SpeedOMeter(
-      {this.start,
-      this.end,
-      this.highlightStart,
-      this.highlightEnd,
-      this.themeData,
-      this.eventObservable}) {}
+      {required this.start,
+      required this.end,
+      required this.highlightStart,
+      required this.highlightEnd,
+      required this.themeData,
+      required this.eventObservable});
 
   @override
-  _SpeedOMeterState createState() => new _SpeedOMeterState(this.start, this.end,
-      this.highlightStart, this.highlightEnd, this.eventObservable);
+  _SpeedOMeterState createState() => _SpeedOMeterState(
+      start: this.start,
+      end: this.end,
+      highlightStart: this.highlightStart,
+      highlightEnd: this.highlightEnd,
+      eventObservable: this.eventObservable);
 }
 
 class _SpeedOMeterState extends State<SpeedOMeter>
@@ -40,53 +43,56 @@ class _SpeedOMeterState extends State<SpeedOMeter>
   PublishSubject<double> eventObservable;
 
   double val = 0.0;
-  double newVal;
+  late double newVal;
   double textVal = 0.0;
-  AnimationController percentageAnimationController;
-  StreamSubscription<double> subscription;
+  AnimationController? percentageAnimationController;
+  late StreamSubscription<double> subscription;
 
-  _SpeedOMeterState(int start, int end, double highlightStart,
-      double highlightEnd, PublishSubject<double> eventObservable) {
-    this.start = start;
-    this.end = end;
-    this.highlightStart = highlightStart;
-    this.highlightEnd = highlightEnd;
-    this.eventObservable = eventObservable;
-
-    percentageAnimationController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 1000))
-      ..addListener(() {
-        setState(() {
-          val = lerpDouble(val, newVal, percentageAnimationController.value);
-        });
-      });
+  _SpeedOMeterState(
+      {required this.start,
+      required this.end,
+      required this.highlightStart,
+      required this.highlightEnd,
+      required this.eventObservable}) {
     subscription = this.eventObservable.listen((value) {
       textVal = value;
       (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
-    }); //(value) => reloadData(value));
+    });
   }
 
   reloadData(double value) {
     print(value);
     newVal = value;
-    percentageAnimationController.forward(from: 0.0);
+    if (percentageAnimationController == null) {
+      percentageAnimationController = AnimationController(
+          vsync: this, duration: Duration(milliseconds: 1000))
+        ..addListener(() {
+          if (mounted) {
+            setState(() {
+              val = lerpDouble(
+                  val, newVal, percentageAnimationController!.value)!;
+            });
+          }
+        });
+    }
+    percentageAnimationController!.forward(from: 0.0);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context).isCurrent == false) {
+    if (ModalRoute.of(context)?.isCurrent == false) {
       return Text("");
     }
-    return new Center(
-      child: new LayoutBuilder(
+    return Center(
+      child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        return new Container(
+        return Container(
           height: constraints.maxWidth,
           width: constraints.maxWidth,
-          child: new Stack(fit: StackFit.expand, children: <Widget>[
-            new Container(
-              child: new CustomPaint(
-                  foregroundPainter: new LinePainter(
+          child: Stack(fit: StackFit.expand, children: <Widget>[
+            Container(
+              child: CustomPaint(
+                  foregroundPainter: LinePainter(
                       lineColor: this.widget.themeData.backgroundColor,
                       completeColor: this.widget.themeData.primaryColor,
                       startValue: this.start,
@@ -95,33 +101,33 @@ class _SpeedOMeterState extends State<SpeedOMeter>
                       endPercent: this.widget.highlightEnd,
                       width: 40.0)),
             ),
-            new Center(
+            Center(
                 //   aspectRatio: 1.0,
-                child: new Container(
+                child: Container(
                     height: constraints.maxWidth,
                     width: double.infinity,
                     padding: const EdgeInsets.all(20.0),
-                    child: new Stack(fit: StackFit.expand, children: <Widget>[
-                      new CustomPaint(
-                        painter: new HandPainter(
+                    child: Stack(fit: StackFit.expand, children: <Widget>[
+                      CustomPaint(
+                        painter: HandPainter(
                             value: val,
                             start: this.start,
                             end: this.end,
                             color: this.widget.themeData.accentColor),
                       ),
                     ]))),
-            new Center(
-              child: new Container(
+            Center(
+              child: Container(
                 width: 30.0,
                 height: 30.0,
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: this.widget.themeData.backgroundColor,
                 ),
               ),
             ),
-            new CustomPaint(
-                painter: new SpeedTextPainter(
+            CustomPaint(
+                painter: SpeedTextPainter(
                     start: this.start, end: this.end, value: this.textVal)),
           ]),
         );
