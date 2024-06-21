@@ -67,10 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData somTheme = ThemeData(
-        primaryColor: Colors.blue,
-        accentColor: Colors.black,
-        backgroundColor: Colors.grey);
+    final ThemeData theme = ThemeData();
+    ThemeData somTheme = theme.copyWith(
+      colorScheme: theme.colorScheme.copyWith(
+        primary: Colors.blue,
+        secondary: Colors.black,
+        background: Colors.grey,
+      ),
+    );
     return Scaffold(
         appBar: AppBar(
           title: Text("SpeedOMeter"),

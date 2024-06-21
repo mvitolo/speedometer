@@ -93,8 +93,8 @@ class _SpeedOMeterState extends State<SpeedOMeter>
             Container(
               child: CustomPaint(
                   foregroundPainter: LinePainter(
-                      lineColor: this.widget.themeData.backgroundColor,
-                      completeColor: this.widget.themeData.primaryColor,
+                      lineColor: this.widget.themeData.colorScheme.background,
+                      completeColor: this.widget.themeData.colorScheme.primary,
                       startValue: this.start,
                       endValue: this.end,
                       startPercent: this.widget.highlightStart,
@@ -113,7 +113,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
                             value: val,
                             start: this.start,
                             end: this.end,
-                            color: this.widget.themeData.accentColor),
+                            color: this.widget.themeData.colorScheme.secondary),
                       ),
                     ]))),
             Center(
@@ -122,7 +122,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
                 height: 30.0,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: this.widget.themeData.backgroundColor,
+                  color: this.widget.themeData.colorScheme.background,
                 ),
               ),
             ),
