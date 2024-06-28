@@ -10,12 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  speedometer:
-   path: ../
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  speedometer:
+   path: ../
 
 flutter:
   uses-material-design: true
