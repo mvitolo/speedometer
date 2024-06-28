@@ -1,4 +1,4 @@
-## [1.5.0] 
+## [1.2.0] 
 ### Improvements
 - Modernization of libs code etc
 ### Feature
