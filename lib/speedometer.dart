@@ -14,16 +14,19 @@ class SpeedOMeter extends StatefulWidget {
   int end;
   double highlightStart;
   double highlightEnd;
+  Duration animationDuration;
   ThemeData themeData;
 
   PublishSubject<double> eventObservable;
+
   SpeedOMeter(
       {required this.start,
       required this.end,
       required this.highlightStart,
       required this.highlightEnd,
       required this.themeData,
-      required this.eventObservable});
+      required this.eventObservable,
+      this.animationDuration = const Duration(milliseconds: 1000)});
 
   @override
   _SpeedOMeterState createState() => _SpeedOMeterState(
@@ -31,6 +34,7 @@ class SpeedOMeter extends StatefulWidget {
       end: this.end,
       highlightStart: this.highlightStart,
       highlightEnd: this.highlightEnd,
+      animationDuration: this.animationDuration,
       eventObservable: this.eventObservable);
 }
 
@@ -40,6 +44,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
   int end;
   double highlightStart;
   double highlightEnd;
+  Duration animationDuration;
   PublishSubject<double> eventObservable;
 
   double val = 0.0;
@@ -53,6 +58,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
       required this.end,
       required this.highlightStart,
       required this.highlightEnd,
+      required this.animationDuration,
       required this.eventObservable}) {
     subscription = this.eventObservable.listen((value) {
       textVal = value;
@@ -61,21 +67,38 @@ class _SpeedOMeterState extends State<SpeedOMeter>
   }
 
   reloadData(double value) {
-    print(value);
+    debugPrint(
+        "value: $value, animationDuration: ${percentageAnimationController?.duration}");
     newVal = value;
     if (percentageAnimationController == null) {
-      percentageAnimationController = AnimationController(
-          vsync: this, duration: Duration(milliseconds: 1000))
-        ..addListener(() {
-          if (mounted) {
-            setState(() {
-              val = lerpDouble(
-                  val, newVal, percentageAnimationController!.value)!;
+      percentageAnimationController =
+          AnimationController(vsync: this, duration: animationDuration)
+            ..addListener(() {
+              if (mounted) {
+                setState(() {
+                  val = lerpDouble(
+                      val, newVal, percentageAnimationController!.value)!;
+                });
+              }
             });
-          }
-        });
     }
     percentageAnimationController!.forward(from: 0.0);
+  }
+
+  @override
+  void didUpdateWidget(covariant SpeedOMeter oldWidget) {
+    debugPrint(
+        "didUpdateWidget with new animationDuration: ${widget.animationDuration}");
+    super.didUpdateWidget(oldWidget);
+    // Check if the animationDuration has changed
+    if (oldWidget.animationDuration != widget.animationDuration) {
+      // Update the AnimationController with the new duration
+      percentageAnimationController?.duration = widget.animationDuration;
+      // If needed, restart the animation with the new duration
+      if (percentageAnimationController?.isAnimating ?? false) {
+        percentageAnimationController?.forward(from: 0.0);
+      }
+    }
   }
 
   @override
@@ -93,8 +116,8 @@ class _SpeedOMeterState extends State<SpeedOMeter>
             Container(
               child: CustomPaint(
                   foregroundPainter: LinePainter(
-                      lineColor: this.widget.themeData.backgroundColor,
-                      completeColor: this.widget.themeData.primaryColor,
+                      lineColor: this.widget.themeData.colorScheme.background,
+                      completeColor: this.widget.themeData.colorScheme.primary,
                       startValue: this.start,
                       endValue: this.end,
                       startPercent: this.widget.highlightStart,
@@ -113,7 +136,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
                             value: val,
                             start: this.start,
                             end: this.end,
-                            color: this.widget.themeData.accentColor),
+                            color: this.widget.themeData.colorScheme.secondary),
                       ),
                     ]))),
             Center(
@@ -122,7 +145,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
                 height: 30.0,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: this.widget.themeData.backgroundColor,
+                  color: this.widget.themeData.colorScheme.background,
                 ),
               ),
             ),

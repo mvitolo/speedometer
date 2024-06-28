@@ -55,22 +55,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int counter = 0;
 
+  Duration _animationDuration = Duration(milliseconds: 100);
+
   PublishSubject<double> eventObservable = PublishSubject();
   @override
   void initState() {
     super.initState();
-    const oneSec = const Duration(seconds: 1);
+    const click = const Duration(milliseconds: 500);
     var rng = Random();
-    Timer.periodic(oneSec,
+    Timer.periodic(click,
         (Timer t) => eventObservable.add(rng.nextInt(59) + rng.nextDouble()));
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData somTheme = ThemeData(
-        primaryColor: Colors.blue,
-        accentColor: Colors.black,
-        backgroundColor: Colors.grey);
+    final ThemeData theme = ThemeData();
+    ThemeData somTheme = theme.copyWith(
+      colorScheme: theme.colorScheme.copyWith(
+        primary: Colors.blue,
+        secondary: Colors.black,
+        background: Colors.grey,
+      ),
+    );
+    var speedOMeter = SpeedOMeter(
+      start: start,
+      end: end,
+      highlightStart: (_lowerValue / end),
+      highlightEnd: (_upperValue / end),
+      themeData: somTheme,
+      eventObservable: this.eventObservable,
+      animationDuration: _animationDuration,
+    );
     return Scaffold(
         appBar: AppBar(
           title: Text("SpeedOMeter"),
@@ -79,13 +94,23 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(40.0),
-              child: SpeedOMeter(
-                  start: start,
-                  end: end,
-                  highlightStart: (_lowerValue / end),
-                  highlightEnd: (_upperValue / end),
-                  themeData: somTheme,
-                  eventObservable: this.eventObservable),
+              child: speedOMeter,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _animationDuration += Duration(milliseconds: 100);
+                });
+              },
+              child: Text('Slower...'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _animationDuration -= Duration(milliseconds: 100);
+                });
+              },
+              child: Text('Faster!'),
             ),
           ],
         ));

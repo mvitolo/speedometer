@@ -11,7 +11,7 @@ A little widget that given an Observable gives you an updated SpeedOMeter.
 You should ensure that you add the following dependency in your Flutter project.
 ```yaml
 dependencies:
- speedometer: "^1.0.1"
+ speedometer: "^1.2.0"
 ```
 
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
