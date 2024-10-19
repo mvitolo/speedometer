@@ -1,6 +1,6 @@
 name: speedometer
 description: A little widget that given an Observable gives you an updated SpeedOMeter.
-version: 1.2.0
+version: 1.2.1
 homepage: https://github.com/mvitolo/speedometer
 
 environment:
