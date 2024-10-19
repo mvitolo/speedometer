@@ -157,4 +157,13 @@ class _SpeedOMeterState extends State<SpeedOMeter>
       }),
     );
   }
+
+  @override
+  dispose() {
+    if (percentageAnimationController != null) {
+      percentageAnimationController!.dispose();
+    }
+    subscription.cancel();
+    super.dispose();
+  }
 }

@@ -1,3 +1,6 @@
+## [1.2.2]
+### Bugfix
+- Fixed crash when the widget is removed from the tree :bug:
 ## [1.2.1] 
 ### Reverted 
 - RXDart back to ^0.26.0 :arrow_down:
